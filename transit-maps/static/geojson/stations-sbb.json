@@ -82,7 +82,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501011",
-"name":"Station 8"
+"name":"Kesavadasapuram "
 },
 "geometry":{
 "type":"Point",
@@ -93,7 +93,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501012",
-"name":"Station 9"
+"name":"Kochulloor Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -104,7 +104,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501013",
-"name":"Station 10"
+"name":"Kallampally Bus Stop"
 },
 "geometry":{
 "type":"Point",
