@@ -10,7 +10,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501000",
-"name":"Station 1"
+"name":"EY Kinfra"
 },
 "geometry":{
 "type":"Point",
@@ -20,7 +20,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501001",
-"name":"Station 2"
+"name":"Vetturoad Junction"
 },
 "geometry":{
 "type":"Point",
@@ -30,7 +30,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501002",
-"name":"Station 3"
+"name":"Kazhakootam Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -40,7 +40,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501003",
-"name":"Station 4"
+"name":"Karyavttom Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -50,7 +50,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501004",
-"name":"Station 5"
+"name":"Mankuzhi Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -60,7 +60,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501005",
-"name":"Station 6"
+"name":"AIR Substation"
 },
 "geometry":{
 "type":"Point",
@@ -71,7 +71,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501010",
-"name":"Station 7"
+"name":"St Mary's Bus Stop"
 },
 "geometry":{
 "type":"Point",
