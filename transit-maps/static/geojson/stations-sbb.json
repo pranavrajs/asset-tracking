@@ -115,7 +115,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501014",
-"name":"Station 11"
+"name":"Sreekaryam Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -126,7 +126,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501015",
-"name":"Station 12"
+"name":"GMGHSS Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -137,7 +137,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501016",
-"name":"Station 16"
+"name":" Kallampally Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -148,7 +148,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501017",
-"name":"Station 17"
+"name":"Sreekaryam"
 },
 "geometry":{
 "type":"Point",
@@ -159,7 +159,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501018",
-"name":"Station 18"
+"name":"Sreekaryam"
 },
 "geometry":{
 "type":"Point",
@@ -170,7 +170,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501019",
-"name":"Station 19"
+"name":"Sreekaryam"
 },
 "geometry":{
 "type":"Point",
@@ -181,7 +181,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501020",
-"name":"Station 20"
+"name":"Sreekaryam Jn"
 },
 "geometry":{
 "type":"Point",
@@ -192,7 +192,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501021",
-"name":"Station 21"
+"name":" Pangappara Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -203,7 +203,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501022",
-"name":"Station 22"
+"name":"ubstation Bus Stop"
 },
 
 
@@ -216,7 +216,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501023",
-"name":"Station 23"
+"name":"Pallippuram Junction"
 },
 "geometry":{
 "type":"Point",
@@ -227,7 +227,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501024",
-"name":"Station 24"
+"name":"Mangalapuram Junction"
 },
 "geometry":{
 "type":"Point",
@@ -238,7 +238,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501025",
-"name":"Station 25"
+"name":"Pothencode Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -249,7 +249,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501026",
-"name":"Station 26"
+"name":" Narikkallu Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -260,7 +260,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501027",
-"name":"Station 27"
+"name":"Vetturoad Junction"
 },
 "geometry":{
 "type":"Point",
@@ -271,7 +271,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501028",
-"name":"Station 28"
+"name":"Narikkallu"
 },
 "geometry":{
 "type":"Point",
@@ -282,7 +282,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"8501029",
-"name":"Station 29"
+"name":" Vetturoad Junction Bus Stop"
 },
 "geometry":{
 "type":"Point",
@@ -293,7 +293,7 @@
 "type":"Feature",
 "properties":{
 "station_id":"85010330",
-"name":"Station 30"
+"name":" Rajiv Gandhi Nagar"
 },
 "geometry":{
 "type":"Point",
