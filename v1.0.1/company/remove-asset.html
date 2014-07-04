@@ -1,0 +1,21 @@
+            <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css">
+  
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a >Asset Master</a></li>
+              <li class="active">Movement History</li>
+            </ol>
+            <!-- Asset Details -->
+            <div class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-heading movement-history"><h3>REMOVE ASSET</h3></div>
+                <div class="panel-body">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="removeAlert()">{{alert.msg}}</alert>
+                    <select name="rm-asset" ng-model="rmasset" ng-options="asset.id as asset.name for asset in assetList">
+                    </select>
+                    {{rmasset}}
+                    <button class="btn btn-primary"ng-click="removeFn(rmasset)">Remove Asset</button>
+                </div>
+              </div>
+            </div>
