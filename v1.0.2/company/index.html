@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+  <title>Dashboard</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/add-asset.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  </head>
+
+  <body ng-app="assetApp">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">COMPANY NAME</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right notification">
+            <li><a href="#"><i class="fa fa-warning"></i>Alerts</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i>Settings<b class="caret"></b></a>
+              <ul class="noti-dropdown dropdown-menu">
+                <li><a href=""><i class="fa fa-user"></i>Profile Settings</a></li>
+                <li><a href=""><i class="fa fa-users"></i>User Groups</a></li>
+                <li><a href=""><i class="fa fa-clock-o"></i>Asset Status</a></li>
+                <li><a href="">Locations</a></li>
+              </ul>
+            </li>
+            <li><a href="#"><i class="fa fa-sign-out"></i> <span>Signout</span></a></li>
+          </ul>
+          
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div id="left-sidebar" class="left-sidebar col-lg-2 col-md-2 col-sm-2">
+
+          <ul class="nav nav-sidebar"> 
+           
+            <li><a><i class="fa fa-sitemap"></i> Asset Master<span class="fa fa-chevron-circle-right"></span></a>
+              <ul>
+               <li><a href="#add-asset/"><i class="fa fa-plus-square-o"></i> Add Assets</a></li>  
+               <li><a href="#remove-asset/"><i class="fa fa-trash-o"></i> Remove Assets</a></li>  
+               <li><a href="#list-all-assets/"><i class="fa fa-reorder"></i> List all Assets</a></li>  
+               <li><a href="#movement-history/"><i class="fa fa-truck"></i>Movement History</a></li>  
+               <li><a href="#ownership-history/"><i class="fa fa-database"></i> Ownership History</a></li>  
+              </ul>
+            </li>
+
+            <li><a><i class="fa fa-child"></i> Employee Details<span class="fa fa-chevron-circle-right"></span></a>
+              <ul>
+               <li><a href="#list-all-employees/"><i class="fa fa-sort-amount-asc"></i>List all employees</a></li>  
+               <li><a href="#map-asset/"><i class="fa fa-link"></i>Map Assets</a></li>  
+               <li><a href="#import-csv/"><i class="fa fa-file-archive-o"></i>Import CSV Data</a></li>  
+              </ul>
+            </li>
+
+            <li><a><i class="fa fa-bar-chart-o"></i>Realtime View<span class="fa fa-chevron-circle-right"></span></a>
+              <ul>
+               <li><a href="#"><i class="fa fa-location-arrow"></i>Location of Assets</a></li>  
+               <li><a href="#"><i class="fa fa-search"></i>Search by Location</a></li>  
+               <li><a href="#scan-screen/"><i class="fa fa-search"></i>Scan Asset</a></li>  
+              </ul>
+            </li>
+
+          </ul>  
+
+        </div>
+
+        <!-- Content Container -->
+        <div class="content-container col-lg-10 col-md-10 col-sm-10 col-xs-12"> 
+          <div class=""></div>
+          <div ng-view class="view-bar"></div>
+        </div>
+        <div class="navbar-default navbar-fixed-bottom footer-fixed col-md-12" role="navigation">
+            <div class="col-md-3 col-sm-3 col-xs-12">
+                <p>Copyright Reserved &copy; Company Pvt. Limited</p>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12">
+              <a href="/privacy-privacy">Privacy Policy |</a>
+              <a href="/privacy-privacy">Disclaimer |</a>
+              <a href="/privacy-privacy">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer  -->
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/dataTables/jquery.dataTables.js"></script>
+    <script src="js/dataTables/dataTables.bootstrap.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+
+    <script src="js/angular-ui.min.js"></script>
+    <script src="js/app/app.js"></script>
+    <script>
+  $(function () {
+    $('#myTab a:last').tab('show')
+  })
+</script>
+  </body>
+</html>

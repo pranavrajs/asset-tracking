@@ -1,0 +1,39 @@
+.add-asset h3
+{
+  padding: 0;
+  margin: 0px;
+  font-size: 19px;
+}
+.form-horizontal
+{
+  margin-top: 40px;
+}
+.form-horizontal input
+{
+  font-size: 12px;
+  border-radius: 0px;
+}
+.form-horizontal textarea
+{
+  min-height: 100px;
+  font-size: 12px;
+  border-radius: 0px;
+}
+.form-horizontal .submit
+{
+  border-radius: 0px;
+}
+.form-horizontal .but-cancel
+{
+  padding-left: 10px;
+  vertical-align: middle;
+}
+.append-months
+{
+  border-radius: 0;
+}
+.input-group[class*=warranty] {
+
+padding-left: 15px;
+
+}
