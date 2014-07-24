@@ -1,0 +1,157 @@
+
+  
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a>Realtime View</a></li>
+              <li class="active">Scan Screen</li>
+            </ol>
+
+            <!--  -->
+            <div class="col-lg-12 panel-details">
+                 <div class="">
+                    <h3>Scan Screen</h3>
+                    <h7>Scan from NFC Reader</h7>
+                 </div>
+
+            </div>
+            <!-- Scan from Employees -->
+            <div ng-show="!submitted" class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form"  name="assetFeed" novalidate>
+                      
+                      <!-- Asset Tag Input -->
+                      <div class="form-group">
+                        <label for="asset-tag" class="col-sm-2 control-label">Asset/Employee Tag</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control" id="asset-tag" placeholder="Asset Tag Id" ng-model="tag" required>
+                        </div>
+                      </div>
+
+                   
+
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn submit btn-primary" ng-disabled="!assetFeed.$valid" ng-click="changeView()">Submit</button>
+                          <a href="#" class="but-cancel">Cancel</a>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+            <!-- Employee Scanning Loader -->
+            <div ng-show="submitted&&dataSearching" class="col-lg-12">             
+              <img style="position:relative;top:50%;left:44%; "src="img/preloader.gif">
+            </div>
+
+            <!-- Scan Details -->
+            <div ng-show="submitted&&!dataSearching&&!error" class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-body">
+                  <div class="col-lg-12 asset-details">
+                          <div class="col-md-6 left-asset-move">
+                            
+                              <p><strong>Employee Name: </strong> {{empData.name}} </p>
+                              <p><strong>Employee LPN : </strong> {{empData.empid}}</p>
+                              <p><strong>Mac ID : </strong>  {{empData.mac}}</p>
+                              <p><strong>Email: </strong> {{empData.email}} </p>
+                              <p><strong>Designation : </strong> {{empData.desig}}</p>
+                              <p><strong>Phone : </strong>  {{empData.phone}}</p>
+                              
+                          </div>
+                          <div class="col-md-6 right-asset-move">        
+                            <p class="img-right-emp-data"><img src="http://media-cache-ec0.pinimg.com/736x/8f/99/2b/8f992b54d28760ed078c3f7a88233dea.jpg"></p>
+                          </div>
+                  </div>
+
+                  <div>
+                      <!-- Scan Asset -->
+                      <tabset>
+                        <tab heading="Scan Assets">
+                          <div ng-show="!assetSubmitted" class="panel panel-default" style="border-radius:0px;">
+                            <div class="panel-body">
+                                <form class="form-horizontal" role="form"  name="assetForm" novalidate>
+                                  
+                                  <!-- Asset Tag Input -->
+                                  <div class="form-group">
+                                    <label for="asset-tag" class="col-sm-2 control-label">Asset Tag</label>
+                                    <div class="col-sm-6">
+                                      <input type="text" class="form-control" id="asset-tag" ng-model="assettag" required>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                      <button type="submit" class="btn submit btn-primary" ng-disabled="!assetForm.$valid" ng-click="assetChangeView()">Submit</button>
+                                      <a href="#" class="but-cancel">Cancel</a>
+                                    </div>
+                                  </div>
+                                </form>
+                            </div>
+                          </div>
+                          <div ng-show="(assetSubmitted&&assetDataSearch)||(expSubmitted&&expAdd)" class="col-lg-12">
+                              <img style="position:relative;top:50%;left:44%; "src="img/preloader.gif">
+                          </div>
+                          <div ng-show="errNotOwner&&!expSubmitted" class="col-lg-12">
+                                <form class="form-horizontal" role="form"  name="enquiryForm" novalidate>
+                                  
+                                  <!-- Asset Tag Input -->
+                                 <!--  <div class="form-group">
+                                    <label for="asset-tag" class="col-sm-2 control-label">Employee Id</label>
+                                    <div class="col-sm-6">
+                                      <input type="text" class="form-control" ng-value="empData.empid" ng-model="expData.empid" read-only required/>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="asset-tag" class="col-sm-2 control-label">Employee Id</label>
+                                    <div class="col-sm-6">
+                                      <input type="text" class="form-control" id="" value="empData.empid" ng-model="expData.assettag" read-only required/>
+                                    </div>
+                                  </div> -->
+                                  <!-- Asset Tag Input -->
+                                  <div class="form-group">
+                                    <label for="asset-tag" class="col-sm-2 control-label">Expanation Notes :</label>
+                                    <div class="col-sm-6">
+                                      <textarea type="text" class="form-control" id="" ng-model="expData.explnot" required></textarea>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                      <button type="submit" class="btn submit btn-primary" ng-disabled="!assetForm.$valid" ng-click="addExplanation()">Submit</button>
+                                      <a href="#" class="but-cancel">Cancel</a>
+                                    </div>
+                                  </div>
+                                </form>
+
+                          </div>
+                        </tab>
+                        <tab heading="Assets Owned by {{empData.name}}">
+                          <div class="panel panel-default" style="border-radius:0px;">
+                            <div class="panel-body">
+                                <table style="table table-bordered col-md-12">
+                                  <thead>
+                                    <th>Sl. No.</th>
+                                    <th>Name of Asset </th>
+                                  </thead>
+                                  <tbody>
+                                    <tr ng-repeat="asset in assetDataEmp">
+                                      <td>{{$index+1}}</td>
+                                      <td>{{asset.assetname}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                          </div>         
+                        </tab>
+                      </tabset>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div ng-show="error" class="col-lg-12">
+              <p>User not Found</p>
+            </div>
