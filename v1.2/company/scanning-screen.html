@@ -1,0 +1,158 @@
+
+  
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a>Realtime View</a></li>
+              <li class="active">Scan Screen</li>
+            </ol>
+
+            <!--  -->
+            <div class="col-lg-12 panel-details">
+                 <div class="">
+                    <h3>Scan Screen</h3>
+                    <h7>Scan from NFC Reader</h7>
+                 </div>
+
+            </div>
+            <script type="text/ng-template" id="myModalContent.html">
+            
+              <div class="modal-body">
+                  <h4 class="modal-title">Report Conflicts</h4>
+                  <p>Select appropriate reasons</p>
+                  <br>
+
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value="">
+                          Checkout / Checkin conflicts
+                    </label>
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" value="" >
+                          Asset Owner Conflict
+                    </label>
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-primary" ng-click="ok()">Submit</button>
+                  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+              </div>
+            </script>
+            
+            <!-- Scan from Employees -->
+            <div ng-show="!submitted" class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-body">
+                    <form class="form-horizontal" name="assetFeed">
+                      
+                      <!-- Asset Tag Input -->
+                      <div class="form-group">
+                        <label for="asset-tag" class="col-sm-2 control-label">Asset / Employee ID</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control" id="asset-tag" placeholder="Asset / Employee Id" ng-model="tag" required>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn submit btn-primary" ng-disabled="!assetFeed.$valid" ng-click="submitNFCdata()">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Employee Scanning Loader -->
+            <div ng-show="submitted&&dataSearch" class="col-lg-12">             
+              <img style="position:relative;top:50%;left:44%; "src="img/preloader.gif">
+            </div>
+            <!-- Scan Details -->
+
+              <div ng-show="submitted&&!dataSearch&&!error" class="col-lg-12" >
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-body">
+                  <div class="col-lg-12 asset-details">
+                          <div class="col-md-6 left-asset-move">
+                              
+                              <p></p>
+                              <p><strong>Employee Name: </strong> {{empData.name}} </p>
+                              <p><strong>Employee LPN : </strong> {{empData.empid}}</p>
+                              <p><strong>Unique ID : </strong>  {{empData.uid}}</p>
+                              <p><strong>Email: </strong> {{empData.email}} </p>
+                              <p><strong>Designation : </strong> {{empData.desig}}</p>
+                              <p><strong>Phone : </strong>  {{empData.phone}}</p>
+                              
+                          </div>
+                          <div class="col-md-3 right-asset-move">        
+                            <p class="img-right-emp-data"><img src="{{empData.url}}"></p>
+                          </div>
+                          <div class="col-md-3 right-asset-move" style="margin-top: 56px;">        
+                            <p class="img-right-emp-data "><span class="alert alert-success"><i class="{{icon}}"></i>  {{status}} </span> </p>
+                          </div>
+                  </div>
+
+                  <div >
+                      <!-- Scan Asset -->
+                      <tabset>
+                        <tab heading="Assets Owned by {{empData.name}}" >
+                          <div class="panel panel-default" style="border-radius:0px;">
+                            <div class="panel-body">
+                                <table class="table assetlist-tab table-hover col-md-12">
+                                  <thead>
+                                    <tr>
+                                      <th>Sl. No.</th>
+                                      <th>Asset Id </th>
+                                      <th>Name of Asset </th>
+                                      <th>Actions</th>
+                                    <tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr ng-repeat="asset in assetDataEmp" ng-class="{highlight:asset.asid == tag}">
+                                      <td>{{$index+1}}</td>
+                                      <td>{{asset.asid}}</td>
+                                      <td>{{asset.assetname}}</td>
+                                      <td><button class="btn btn-primary padd-6" ng-class="{disabled:asset.asid != tag}"  ng-click="open()">Report Conflicts</button></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                          </div>         
+                        </tab>
+                        <tab heading="Checkout History" ng-click="getCheckoutHistory()">
+                            <div ng-show="error" class="col-lg-12">
+                              <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table assetlist-tab table-hover col-md-12">
+                                  <thead>
+                                    <tr>
+                                      <th>Sl. No.</th>
+                                      <th>Status</th>
+                                      <th>Time - Date</th>
+                                    <tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr ng-repeat = "log in searchCheckoutdata">
+                                      <td>{{$index+1}}</td>
+                                      <td>{{checkout[log.status]}}</td>
+                                      <td>{{log.createdAt}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </tab>
+                      </tabset>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Error While Employee / Asset Search -->
+            <div ng-show="error" class="col-lg-12">
+              <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            </div>

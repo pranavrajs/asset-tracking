@@ -1,0 +1,69 @@
+            <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css">
+  
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a >Asset Master</a></li>
+              <li class="active">Ownership History Log</li>
+            </ol>
+            
+            <div class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-heading movement-history"><h3>Asset</h3></div>
+                <div class="panel-body">
+                    <table class="table table-bordered" id="movement-table">
+                    
+                        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="removeAlert()">{{alert.msg}}</alert>
+                        <select name="rm-asset" ng-model="rmasset" ng-options="asset.tag as asset.name for asset in assetList">
+                        </select>
+                    
+                        <button class="btn btn-primary" ng-click="getLogAssetFn (rmasset)">Get Ownership History</button>
+                    </table>
+                    <div  ng-if="assetSelected ==1 " class="col-lg-12 asset-details">
+                          <div class="col-md-6 left-asset-move">
+                            
+                              <p><strong>Asset Tag: </strong> {{assetData.tag}} </p>
+                              <p><strong>Asset Name: </strong> <a href="#asset-details/{{assetData.tag}}">{{assetData.name}}</a></p>
+                             
+                          </div>
+                          <div ng-class="col-md-6 right-asset-move">        
+                            <p>
+                                <p class="left-asset-move-p col-md-6">
+                                  <img src="img/profile.jpg"/ style="width:50px;height:50px;">
+                                  <span><b>{{empData.name}}</b>
+                                        <br>{{empData.desig}}
+                                        <br>{{empData.empid}}
+                                  </span>
+
+                                </p>
+                            </p>
+                          </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ownership History Log -->
+            <div class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-heading movement-history"><h3>OWNERSHIP HISTORY LOG</h3></div>
+                <div class="panel-body">
+                    <table class="table table-bordered" id="movement-table">
+                        <thead>
+                          <th>Sl.No</th>
+                          <th>Employee Name</th>
+                          <th>Asset Name</th>
+                          <th>Notes</th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="item in mapList">
+                            <td>{{$index+1}}</td>
+                            <td>{{item.empname}}</td>
+                            <td>{{item.assetname}}</td>
+                            <td>{{item.notes}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
