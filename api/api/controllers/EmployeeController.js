@@ -28,9 +28,9 @@ module.exports = {
 						return res.json({status:404},404);
 					console.log(data);
 					if(data === undefined)
-						return res.json({});
+						return res.json({notDefined:true});
 					else
-						return res.json(data);
+						return res.json({notDefined:false,data:data});
 					});
 	}
 };

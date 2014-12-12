@@ -17,7 +17,7 @@
                         <select name="rm-asset" ng-model="rmasset" ng-options="asset.tag as asset.name for asset in assetList">
                         </select>
                     
-                        <button class="btn btn-primary"ng-click="getLogAssetFn(rmasset)">Get Ownership History</button>
+                        <button class="btn btn-primary" ng-click="getLogAssetFn (rmasset)">Get Ownership History</button>
                     </table>
                     <div  ng-if="assetSelected ==1 " class="col-lg-12 asset-details">
                           <div class="col-md-6 left-asset-move">

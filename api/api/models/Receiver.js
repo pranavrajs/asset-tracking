@@ -20,7 +20,7 @@ module.exports = {
 		},
 		zone:
 		{
-			type:"string",
+			type:"integer",
 			required:true
 		},
 		status:{

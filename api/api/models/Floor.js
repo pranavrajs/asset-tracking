@@ -14,7 +14,12 @@ module.exports = {
 			type:"string",
 			required:true
 		},
-		building:
+		fid:
+		{
+			type:"integer",
+			required:true
+		},
+		bldid:
 		{
 			type:"string",
 			required:true

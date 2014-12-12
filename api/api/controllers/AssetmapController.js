@@ -20,6 +20,32 @@ module.exports = {
 
 	},
 
+	findAllAssetMaps:function(req,res){
+		
+		Assetmap.find()
+			 .where({status:1})
+			 .exec(function(err,data){
+			 	console.log(err);
+				if(err)
+					return res.json({status:404},404);
+				return res.json(data);
+			});
+	},
+
+
+	findMapbyEmp:function(req,res){
+
+		var id = req.param('id');
+		Assetmap.find({empid:id})
+				.sort('id DESC')
+				.exec(function(err,data){
+					if(err)
+						return res.json({status:404},404);
+					return res.json(data);
+				});
+
+	},
+
 	findMapbyAsset:function(req,res){
 
 		var id = req.param('id');

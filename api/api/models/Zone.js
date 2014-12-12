@@ -20,7 +20,7 @@ module.exports = {
 			required:true
 		},
 		floor:{
-			type:"string",
+			type:"integer",
 			required:true
 		},
 		status:{

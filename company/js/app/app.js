@@ -38,6 +38,10 @@ assetApp.config(['$routeProvider',function($routeProvider){
 							templateUrl:'map-asset.html',
 							controller:'MapAssetController'
 					})
+					.when('/view-asset-details',{
+							templateUrl:'view-asset-details.html',
+							controller:'ViewAssetDetailsController'
+					})
 					.when('/ownership-history',{
 							templateUrl:'ownership.html',
 							controller:'OwnHistController'
@@ -62,6 +66,15 @@ assetApp.config(['$routeProvider',function($routeProvider){
 							templateUrl:'remove-asset.html',
 							controller:'RemoveAssetController'
 					})
+				   .when('/import-csv',{
+							templateUrl:'import-csv.html',
+							controller:'ImportCsvController'
+					})
+				   .when('/scan-screen',{
+							templateUrl:'scan-screen.html',
+							controller:'ScanScreenController',
+							reloadOnSearch: true
+					})
 					.otherwise({
 							redirectTo:'/add-asset'
 					});
@@ -74,6 +87,57 @@ assetApp.controller('ListAssetController',function($scope,$http){
 		 .success(function(data){
 		 	$scope.assetList=data;
 		 });
+});
+assetApp.controller('ScanScreenController',function($route,$scope,$location,$http,$log){
+
+	$scope.submitted = false;
+	$scope.dataSearching = false;
+	$scope.empData = {};
+	$scope.error=false;
+	$scope.changeView = function(){
+		$scope.dataSearching = true;
+		$scope.submitted = true;
+		$http.post("http://localhost:1337/employee/findEmpbyId/"+$scope.tag)
+				 .success(function(empData){
+				 		$scope.dataSearching = false;
+					 	$log.info(empData);
+					 	if(empData.notDefined)
+					 	{
+					 		$scope.error = true;
+					 		return;
+					 	}
+					 	$scope.empData = empData.data;
+					 	$scope.getUserAsset($scope.empData.empid);
+				 });
+    };
+   	
+    $scope.assetSubmitted = false;
+	$scope.assetdataSearch = false;
+	$scope.assetData = {};
+	$scope.assetError=false;
+
+	$scope.assetChangeView = function(){
+		$scope.assetDataSearch = true;
+		$scope.assetSubmitted = true;
+    };
+    $scope.assetDataEmp =[];
+    $scope.getUserAsset = function(id)
+    {
+    	$http.post("http://localhost:1337/assetmap/findMapbyEmp/"+id)
+				 .success(function(empData){
+				 	 	$log.info(empData);
+    					empData.forEach(function(dataItem){
+					
+		 					$http.get("http://localhost:1337/asset/findAssetbyId/"+dataItem.asid)
+		 				 		.success(function(assetData){
+		 			 				dataItem.assetname = assetData.name;
+		 			 			});
+				
+		 				});
+		 				$scope.assetDataEmp =empData;
+    					
+				 });
+    }
 });
 assetApp.controller('OwnHistController',function($scope,$http,$log){
 	/*
@@ -136,7 +200,7 @@ assetApp.controller('OwnHistController',function($scope,$http,$log){
 
 		$http.get("http://localhost:1337"+url)
 		 .success(function(data){
-
+		 	$scope.empData = [];
 		 	data.forEach(function(dataItem,index){
 	/*
 		
@@ -147,22 +211,21 @@ assetApp.controller('OwnHistController',function($scope,$http,$log){
 	*/
 		 		$http.get("http://localhost:1337/employee/findEmpbyId/"+dataItem.empid)
 		 			 .success(function(empData){
+
+		 			 	empData = empData.data;
 		 			 	if(!index)
 		 			 		$scope.empData = empData;
 
 		 			 	dataItem.empname = empData.name;
-		 			 	$log.info(dataItem.employee);
+		 			 	$log.info(dataItem.empid);
 		 			 	$log.info(empData.name);
 		 			 });
-		 		if(!$scope.assetSelected)
-		 		{	
+		 	
 		 			$http.get("http://localhost:1337/asset/findAssetbyId/"+dataItem.asid)
 		 				 .success(function(assetData){
 		 			 		dataItem.assetname = assetData.name;
 		 			 	});
-				}
-				else
-					dataItem.assetname = $scope.assetData.name;		 		
+				
 		 	});
 		 	$scope.mapList=data;
 

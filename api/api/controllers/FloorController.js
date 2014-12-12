@@ -7,5 +7,10 @@
 
 module.exports = {
 	
+	searchRRbyFid:function(req,res){
+
+		var id = req.param('id');
+		id = parseInt(id);
+	}	
 };
 
