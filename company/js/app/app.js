@@ -17,13 +17,50 @@ assetApp.service('alertService', function() {
 		Configure this url for proper functioning of Angular App
 
 	*/
-assetApp.service('urlService', function() {
-        return {
-            globalUrl: function() {
-				return "http://localhost:1337/";
-            }
-        };
-});
+assetApp.factory('urlFactory', ['$http', function($http) {
+
+    var urlBase = 'http://localhost:1337';
+    var url = {};
+
+    url.getAllAssets = function () {
+        return $http.get(urlBase+'/asset/findAllAssets');
+    };
+
+   
+    url.getEmpbyId = function (empid) {
+        return $http.post(urlBase+'/employee/findEmpbyId/'+empid);
+    };
+
+    url.findAssetbyId = function (assetid) {
+        return $http.post(urlBase + '/asset/findAssetbyId/'+assetid);
+    };
+ 	
+ 	url.findLatestOwner = function (assetid) {
+        return $http.post(urlBase + '/assetmap/findLatestOwner/'+assetid);
+    };
+
+ 	url.findEmpbyId = function (empid) {
+        return $http.post(urlBase + '/employee/findEmpbyId/'+empid);
+    };
+
+ 	url.findMapbyEmp = function (empid) {
+        return $http.post(urlBase + '/assetmap/findMapbyEmp/'+empid);
+    };
+
+    url.findAssetbyId = function(asid)
+    {
+		return $http.post(urlBase + '/asset/findAssetbyId/' +asid);
+	};
+	url.findCheckoutbyRefid = function(refid)
+	{
+		return $http.post(urlBase + '/checkout/findbyRefid/' +refid);
+	};
+	url.addCheckout = function(refid)
+	{
+		return $http.post(urlBase + '/checkout/addcheckout/' +refid);		
+	}
+    return url;
+}]);
 
 	/*
 		$routeProvider - UI routing is done here
@@ -71,58 +108,84 @@ assetApp.config(['$routeProvider',function($routeProvider){
 							controller:'ImportCsvController'
 					})
 				   .when('/scan-screen',{
-							templateUrl:'scan-screen.html',
-							controller:'ScanScreenController',
-							reloadOnSearch: true
+							templateUrl:'scanning-screen.html',
+							controller:'ScanningScreenController'
 					})
 					.otherwise({
-							redirectTo:'/add-asset'
+							redirectTo:'/scan-screen'
 					});
-	
 }]);
 
-assetApp.controller('ListAssetController',function($scope,$http){
+assetApp.controller('ListAssetController',['$scope','urlFactory',function($scope,urlFactory){
 	$scope.assetList=[];
-	$http.get("http://localhost:1337/asset/findAllAssets")
+	urlFactory.getAllAssets()
 		 .success(function(data){
 		 	$scope.assetList=data;
 		 });
-});
-assetApp.controller('ScanScreenController',function($route,$scope,$location,$http,$log){
+}]);
+assetApp.controller('ScanScreenController',function($scope,$location,urlFactory,$log){
 
 	$scope.submitted = false;
 	$scope.dataSearching = false;
 	$scope.empData = {};
 	$scope.error=false;
+
 	$scope.changeView = function(){
 		$scope.dataSearching = true;
 		$scope.submitted = true;
-		$http.post("http://localhost:1337/employee/findEmpbyId/"+$scope.tag)
-				 .success(function(empData){
+		urlFactory.getEmpbyId($scope.tag)
+			 .success(function(empData){
 				 		$scope.dataSearching = false;
 					 	$log.info(empData);
 					 	if(empData.notDefined)
 					 	{
-					 		$scope.error = true;
+					 		$scope.error = true;	
 					 		return;
 					 	}
 					 	$scope.empData = empData.data;
 					 	$scope.getUserAsset($scope.empData.empid);
-				 });
+			 })
+			 .error(function(data, status, headers, config) {
+			 	$scope.dataSearching = false;
+					 	
+    		 });
     };
    	
     $scope.assetSubmitted = false;
 	$scope.assetdataSearch = false;
 	$scope.assetData = {};
 	$scope.assetError=false;
+	$scope.errNotOwner = false;
 
 	$scope.assetChangeView = function(){
 		$scope.assetDataSearch = true;
 		$scope.assetSubmitted = true;
+		if($scope.assetDataEmp.indexOf($scope.assettag)==-1)
+		{
+			$scope.assetDataSearch = false;
+			$scope.errNotOwner = true;
+		}
+    	$scope.addExplanation = function(){
+			$scope.expAdd = true;
+			$scope.expSubmitted = true;
+			$log.info($scope.assettag +""	 +$scope.explnot);
+			$scope.explData = '{ "notes" : "'+ $scope.expData.explnot + '"}';
+			$http.post("http://localhost:1337/expnotes/create",JSON.parse($scope.explData))
+			.success(function(empData){
+			 	$log.info(empData);
+	    		$scope.expAdd = false;
+				$scope.assetDataSearch = false;
+				$scope.assetSubmitted = false;
+				$scope.assettag = "";
+				$scope.expSubmitted = false;		
+			});
+    	};
+
     };
+
+    
     $scope.assetDataEmp =[];
-    $scope.getUserAsset = function(id)
-    {
+    $scope.getUserAsset = function(id){
     	$http.post("http://localhost:1337/assetmap/findMapbyEmp/"+id)
 				 .success(function(empData){
 				 	 	$log.info(empData);
@@ -134,12 +197,258 @@ assetApp.controller('ScanScreenController',function($route,$scope,$location,$htt
 		 			 			});
 				
 		 				});
-		 				$scope.assetDataEmp =empData;
-    					
+		 				$scope.assetDataEmp =empData;					
 				 });
     }
 });
-assetApp.controller('OwnHistController',function($scope,$http,$log){
+
+var ModalInstanceCtrl = function ($scope, $modalInstance) {
+
+  $scope.items = ["item1","item2"];
+  $scope.selected = {
+    item: $scope.items[0]
+  };
+
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
+assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope,$log){
+
+	$scope.alerts = [
+    	{ type: 'danger', msg: 'Employee / Asset not found . Try submitting again... :( ' },
+	];
+
+	$scope.closeAlert = function(index) {
+    	$scope.submitted = false;
+    	$scope.dataSearch = false;	
+    	$scope.error = false;
+    	$scope.tag ="";
+  	};
+	/*
+		Submitted true when form is submitted 
+	*/ 
+		$scope.status = "";
+		$scope.icon = "";
+		$scope.submitted = false;
+		$scope.dataSearch = false;
+		$scope.clicked = false;	
+		$scope.searchCheckout = false;
+	/*
+		Error true when the user / asset not found 
+	*/	
+		$scope.checkout = ["Checkin","Checkout"];
+		$scope.getCheckoutHistory = function(data)
+		{
+			if($scope.clicked == false){
+				$scope.clicked = true;
+				urlFactory.findCheckoutbyRefid($scope.tag)
+						  .success(function(data){
+
+								$scope.searchCheckout = false;
+								$log.info(data);
+								$scope.searchCheckoutdata = data.data;
+						  })
+						  .error(function(err){
+
+								$scope.searchCheckout = false;
+						  });
+
+			}
+
+		};
+		
+		$scope.open = function () {
+
+		    var modalInstance = $modal.open({
+		      templateUrl: 'myModalContent.html',
+		      controller:ModalInstanceCtrl,
+		      resolve: {
+		        items: function () {
+		          return $scope.items;
+		        }
+		      }
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      $scope.selected = selectedItem;
+		    }, function () {
+		      $log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
+
+		$scope.submitNFCdata = function()
+		{
+			$scope.submitted = true;
+			$scope.dataSearch = true;
+
+			/*
+				
+
+				Search employee Data ... 
+
+			*/ 
+			
+			var res = $scope.tag.split("-");
+
+			$scope.tag = res[1];
+			urlFactory.getEmpbyId($scope.tag)
+				 .success(function(empData){
+					 		
+						 	$log.info(empData);
+						 	/*
+								No Employee found ... If so search for Asset
+						 	*/
+						 	if(empData.notDefined)
+						 	{
+						 		//Searh for Asset
+						 		urlFactory.findAssetbyId($scope.tag)
+			 				 		.success(function(assetData){
+			 				 			$log.info(assetData);
+			 				 			
+			 				 			
+			 				 			//If no Asset then set error flag 
+			 				 			if(assetData.notDefined)
+			 				 			{
+			 				 				$scope.dataSearch = false;
+			 				 				$scope.error = true;
+			 				 				return;
+			 				 			}
+			 				 			//else search for the owner 
+			 				 			urlFactory.findLatestOwner(assetData.data.tag)
+			 				 					  .success(function(ownerData){
+
+			 				 							$log.info(ownerData);
+			 				 							// If owner not found show the tab NO OWNER FOUND 
+			 				 							if(ownerData.notDefined)
+			 				 							{
+			 				 								$scope.OwnerNotFoundError = true;
+			 				 								return;
+			 				 							}
+			 				 							//else Search for the employee details  
+			 				 							urlFactory.findEmpbyId(ownerData.data.empid)
+			 				 									  .success(function(empownerData){
+
+							 				 							$log.info(empownerData);
+							 				 							// If owner not found show the tab NO OWNER FOUND 
+							 				 							if(empownerData.notDefined)
+							 				 							{
+							 				 								$scope.OwnerNotFoundError = true;
+							 				 								return;
+							 				 							}
+							 				 							$scope.empData = empownerData.data;
+			 				 									  });
+
+			 				 							// and search for his/her assets .. 
+			 				 					/*
+			 				 							urlFactory.findMapbyEmp(ownerData.data.empid)
+			 				 									  .success(function(assetDataEmp){
+
+							 				 							$log.info(assetDataEmp);
+							 				 							// If no asset found  
+							 				 							if(assetDataEmp.notDefined)
+							 				 							{
+							 				 								$scope.noAssetFound = true;
+							 				 								return;
+							 				 							}
+
+							 				 							assetDataEmp.data.forEach(function(dataItem){
+																			
+																			urlFactory.findAssetbyId(dataItem.asid)					
+														 				 		.success(function(assetData){
+														 			 				dataItem.assetname = assetData.data.name;
+														 			 			});
+															
+														 				});
+							 				 							$scope.assetDataEmp = assetDataEmp.data;
+			 				 									  }); */
+														$scope.searchAsset(ownerData.data.empid);
+
+			 				 					  })
+			 				 					  .error(function(data, status, headers, config) {
+				 										$scope.dataSearch = false;	 	
+	    		 								  });
+			 				 			$scope.dataSearch = false;
+			 				 			$scope.searchData = assetData.data;
+
+			 			 			})
+			 			 			.error(function(data, status, headers, config) {
+				 						$scope.dataSearch = false;	 	
+	    		 					});
+			 			 			urlFactory.addCheckout($scope.tag)
+									  .success(function(data){
+
+									  		$log.info("CHECKOUT/IN - "+data);
+									  		
+									  		if(data.status ==1){
+									  			$scope.icon ="fa fa-sign-out";
+									  			$scope.status ="Checkout";
+									  		}
+									  		else{
+
+									  			$scope.icon ="fa fa-sign-in";
+									  			$scope.status = "Checkin";
+									  		}
+									  });
+						 		return;
+						 	}
+						 	$scope.dataSearch = false;
+						 	$scope.searchData = empData.data;
+						 	$scope.empData = $scope.searchData;
+							$scope.searchAsset($scope.empData.empid);
+							
+							urlFactory.addCheckout($scope.tag)
+									  .success(function(data){
+
+									  		$log.info("CHECKOUT/IN - "+data);
+									  		
+									  		if(data.status ==1){
+									  			$scope.icon ="fa fa-sign-out";
+									  			$scope.status ="Checkout";
+									  		}
+									  		else{
+
+									  			$scope.icon ="fa fa-sign-in";
+									  			$scope.status = "Checkin";
+									  		}
+									  });
+				 })
+				 .error(function(data, status, headers, config) {
+				 	$scope.dataSearch = false;	 	
+	    		 });
+		};
+
+
+		$scope.searchAsset = function(empid){
+			urlFactory.findMapbyEmp(empid)
+					  .success(function(assetDataEmp){
+
+							$log.info(assetDataEmp);
+							// If owner not found show the tab NO OWNER FOUND 
+							if(assetDataEmp.notDefined)
+							{
+								$scope.OwnerNotFoundError = true;
+								return;
+							}
+
+							assetDataEmp.data.forEach(function(dataItem){
+																			
+								urlFactory.findAssetbyId(dataItem.asid)					
+							 		.success(function(assetData){
+						 				dataItem.assetname = assetData.data.name;
+						 			});
+															
+							});
+							$scope.assetDataEmp = assetDataEmp.data;
+			 		  });
+		};
+});
+assetApp.controller('OwnHistController',function($scope,urlFactory,$http,$log){
 	/*
 		
 	*/
@@ -153,7 +462,7 @@ assetApp.controller('OwnHistController',function($scope,$http,$log){
 
 	*/
 	$scope.assetList=[];																			
-	$http.get("http://localhost:1337/asset/findAllAssets")														
+	urlFactory.getAllAssets()												
 		 .success(function(data){
 		 	$scope.assetList=data;
 		 });

@@ -3,14 +3,37 @@
 body {
   padding-top: 50px;
   font-family: 'Open Sans';
-  font-size: 12px;
+  font-size: 12px;/*
   webkit-text-stroke: 0.6px; 
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);*/
 }
 /*
     Notification Panel CSS
 
 */
+.btn
+{
+  padding: 6px;
+  color: #fff;
+  border-radius: 2px;
+}
+.table-hover tbody tr td
+{
+  vertical-align: middle;
+}
+.visible-button
+{
+ display:none; 
+}
+.visible-button-true
+{
+  display:block;
+}
+.padd-6
+{
+  padding: 6px;
+  font-size:12px;
+}
 .panel-details
 {
   border-bottom:1px #eee solid;
@@ -35,10 +58,14 @@ body {
 .left-sidebar
 {
   background: #354052;
+  position: fixed;
+  top: 51px;
+  bottom: 0;
   left: 0;
   display: block;
   padding: 0px;
   color: #333;
+  overflow: auto;
 }
 .navbar-default
 {
@@ -191,9 +218,18 @@ input
 {
   border-radius: 20px;
 }
+.modal-dialog
+{
+  margin-top:110px;
+}
+.modal-content
+{
+  border-radius: 0px;
+}
 .panel
 {
   border:0px;
+
 }
 .panel h3
 {
@@ -206,6 +242,15 @@ input
 .asset-details
 {
   margin-top: 10px; 
+  border: 1px solid #eee;
+  padding:2%;
+  margin-bottom: 2%;
+  background: #fff;
+  border-radius: 3px;
+}
+.left-asset-move
+{
+
 }
 .left-asset-move p
 {
@@ -238,20 +283,24 @@ v  vertical-align: middle;
 .content-container
 {
   margin-top: 1%;
+
+  margin-left: 16.666%;
   margin-bottom: 6%;
   background: #fff;
   overflow-y:auto;
   height: 100%;
+}
+.highlight
+{
+  border-left : 4px red solid;
+  background: #ffb2b2;
 }
 .breadcrumb
 {
   border-radius: 0px;
   background: #fff;
 }
-.view-bar
-{
-  background: #EBF1F5;
-}
+
 .footer-fixed
 {
   height: auto;

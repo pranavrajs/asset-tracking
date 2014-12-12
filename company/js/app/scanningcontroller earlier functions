@@ -1,0 +1,95 @@
+			urlFactory.getEmpbyId(res[1])
+				 .success(function(empData){
+					 		
+						 	$log.info(empData);
+						 	/*
+								No Employee found ... If so search for Asset
+						 	*/
+						 	if(empData.notDefined)
+						 	{
+						 		//Searh for Asset
+						 		urlFactory.findAssetbyId(res[1])
+			 				 		.success(function(assetData){
+			 				 			$log.info(assetData);
+			 				 			
+			 				 			
+			 				 			//If no Asset then set error flag 
+			 				 			if(assetData.notDefined)
+			 				 			{
+			 				 				$scope.dataSearch = false;
+			 				 				$scope.error = true;
+			 				 				return;
+			 				 			}
+			 				 			//else search for the owner 
+			 				 			urlFactory.findLatestOwner(assetData.data.tag)
+			 				 					  .success(function(ownerData){
+
+			 				 							$log.info(ownerData);
+			 				 							// If owner not found show the tab NO OWNER FOUND 
+			 				 							if(ownerData.notDefined)
+			 				 							{
+			 				 								$scope.OwnerNotFoundError = true;
+			 				 								return;
+			 				 							}
+			 				 							//else Search for the employee details  
+			 				 							urlFactory.findEmpbyId(ownerData.data.empid)
+			 				 									  .success(function(empownerData){
+
+							 				 							$log.info(empownerData);
+							 				 							// If owner not found show the tab NO OWNER FOUND 
+							 				 							if(empownerData.notDefined)
+							 				 							{
+							 				 								$scope.OwnerNotFoundError = true;
+							 				 								return;
+							 				 							}
+							 				 							$scope.empData = empownerData.data;
+			 				 									  });
+
+			 				 							// and search for his/her assets .. 
+			 				 					/*
+			 				 							urlFactory.findMapbyEmp(ownerData.data.empid)
+			 				 									  .success(function(assetDataEmp){
+
+							 				 							$log.info(assetDataEmp);
+							 				 							// If no asset found  
+							 				 							if(assetDataEmp.notDefined)
+							 				 							{
+							 				 								$scope.noAssetFound = true;
+							 				 								return;
+							 				 							}
+
+							 				 							assetDataEmp.data.forEach(function(dataItem){
+																			
+																			urlFactory.findAssetbyId(dataItem.asid)					
+														 				 		.success(function(assetData){
+														 			 				dataItem.assetname = assetData.data.name;
+														 			 			});
+															
+														 				});
+							 				 							$scope.assetDataEmp = assetDataEmp.data;
+			 				 									  }); */
+														$scope.searchAsset(ownerData.data.empid);
+
+			 				 					  })
+			 				 					  .error(function(data, status, headers, config) {
+				 										$scope.dataSearch = false;	 	
+	    		 								  });
+			 				 			$scope.dataSearch = false;
+			 				 			$scope.searchData = assetData.data;
+
+			 			 			})
+			 			 			.error(function(data, status, headers, config) {
+				 						$scope.dataSearch = false;	 	
+	    		 					});
+
+						 		return;
+						 	}
+						 	$scope.dataSearch = false;
+						 	$scope.searchData = empData.data;
+						 	$scope.empData = $scope.searchData;
+							$scope.searchAsset($scope.empData.empid);
+
+				 })
+				 .error(function(data, status, headers, config) {
+				 	$scope.dataSearch = false;	 	
+	    		 });

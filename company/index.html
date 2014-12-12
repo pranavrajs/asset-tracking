@@ -23,7 +23,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand">COMPANY NAME</a>
+          <a class="navbar-brand">EY</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right notification">
@@ -49,13 +49,22 @@
 
           <ul class="nav nav-sidebar"> 
            
+
+            <li><a><i class="fa fa-bar-chart-o"></i>Realtime View<span class="fa fa-chevron-circle-right"></span></a>
+              <ul><!-- 
+               <li><a href="#"><i class="fa fa-location-arrow"></i>Location of Assets</a></li>  
+               <li><a href="#"><i class="fa fa-search"></i>Search by Location</a></li>   -->
+               <li><a href="#scan-screen/"><i class="fa fa-search"></i>Scan Asset</a></li>  
+              </ul>
+            </li>
+
             <li><a><i class="fa fa-sitemap"></i> Asset Master<span class="fa fa-chevron-circle-right"></span></a>
               <ul>
                <li><a href="#add-asset/"><i class="fa fa-plus-square-o"></i> Add Assets</a></li>  
                <li><a href="#remove-asset/"><i class="fa fa-trash-o"></i> Remove Assets</a></li>  
                <li><a href="#list-all-assets/"><i class="fa fa-reorder"></i> List all Assets</a></li>  
-               <li><a href="#movement-history/"><i class="fa fa-truck"></i>Movement History</a></li>  
-               <li><a href="#ownership-history/"><i class="fa fa-database"></i> Ownership History</a></li>  
+               <li><a href="#movement-history/"><i class="fa fa-truck"></i>Movement History</a></li>  <!-- 
+               <li><a href="#ownership-history/"><i class="fa fa-database"></i> Ownership History</a></li>  --> 
               </ul>
             </li>
 
@@ -67,14 +76,6 @@
               </ul>
             </li>
 
-            <li><a><i class="fa fa-bar-chart-o"></i>Realtime View<span class="fa fa-chevron-circle-right"></span></a>
-              <ul>
-               <li><a href="#"><i class="fa fa-location-arrow"></i>Location of Assets</a></li>  
-               <li><a href="#"><i class="fa fa-search"></i>Search by Location</a></li>  
-               <li><a href="#scan-screen/"><i class="fa fa-search"></i>Scan Asset</a></li>  
-              </ul>
-            </li>
-
           </ul>  
 
         </div>
@@ -82,7 +83,7 @@
         <!-- Content Container -->
         <div class="content-container col-lg-10 col-md-10 col-sm-10 col-xs-12"> 
           <div class=""></div>
-          <div ng-view class="view-bar"></div>
+          <div ng-view></div>
         </div>
         <div class="navbar-default navbar-fixed-bottom footer-fixed col-md-12" role="navigation">
             <div class="col-md-3 col-sm-3 col-xs-12">
