@@ -1,4 +1,4 @@
-var assetApp = angular.module('assetApp', ['ui.bootstrap','ngRoute']);
+var assetApp = angular.module('assetApp', ['ui.bootstrap','ngRoute','monospaced.qrcode']);
 
 assetApp.service('alertService', function() {
         return {
@@ -25,7 +25,15 @@ assetApp.factory('urlFactory', ['$http', function($http) {
     url.getAllAssets = function () {
         return $http.get(urlBase+'/asset/findAllAssets');
     };
-
+    url.getAllAssetsDetails = function () {
+        return $http.get(urlBase+'/asset/findAllAssetDetails');
+    };
+    url.getAllEmployees = function () {
+        return $http.get(urlBase+'/employee/findAllEmployees');
+    };
+    url.getAllEmployeeDetails = function () {
+        return $http.get(urlBase+'/employee/findAllEmployeeDetails');
+    };
    
     url.getEmpbyId = function (empid) {
         return $http.post(urlBase+'/employee/findEmpbyId/'+empid);
@@ -75,6 +83,10 @@ assetApp.config(['$routeProvider',function($routeProvider){
 							templateUrl:'map-asset.html',
 							controller:'MapAssetController'
 					})
+					.when('/write-tag',{
+							templateUrl:'write-tag.html',
+							controller:'WriteTagController'
+					})
 					.when('/view-asset-details',{
 							templateUrl:'view-asset-details.html',
 							controller:'ViewAssetDetailsController'
@@ -116,11 +128,43 @@ assetApp.config(['$routeProvider',function($routeProvider){
 					});
 }]);
 
+assetApp.controller('WriteTagController',['$log','$scope','$modal','urlFactory',function($log,$scope,$modal,urlFactory){
+	$scope.list=[];
+	$scope.employee="";
+	urlFactory.getAllEmployees()
+				.success(function(empData){
+					empData.forEach(function(data){$scope.list.push(data)});
+				});
+	urlFactory.getAllAssets()
+				.success(function(assetData){
+					assetData.forEach(function(data){$scope.list.push(data)});
+				});
+	$scope.changeModel =function(data)
+	{
+			console.log($scope.list);
+			$scope.employee = data.uid;	
+	};
+	$scope.writeNFCdata = function () {
+
+		    var modalInstance = $modal.open({
+		      templateUrl: 'writeTag.html',
+		      controller:ModalInstanceCtrl,
+		      resolve: {
+		        employee: function () {
+		          return $scope.employee;
+		        }
+		      }
+		    });
+
+		    
+		};
+}]);
 assetApp.controller('ListAssetController',['$scope','urlFactory',function($scope,urlFactory){
 	$scope.assetList=[];
-	urlFactory.getAllAssets()
+	urlFactory.getAllAssetsDetails()
 		 .success(function(data){
 		 	$scope.assetList=data;
+		 	console.log(data);
 		 });
 }]);
 assetApp.controller('ScanScreenController',function($scope,$location,urlFactory,$log){
@@ -202,20 +246,12 @@ assetApp.controller('ScanScreenController',function($scope,$location,urlFactory,
     }
 });
 
-var ModalInstanceCtrl = function ($scope, $modalInstance) {
-
-  $scope.items = ["item1","item2"];
-  $scope.selected = {
-    item: $scope.items[0]
-  };
-
-  $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
-  };
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+var ModalInstanceCtrl = function ($scope, $modalInstance,employee) {
+	$scope.employee = employee;
+ 
+ 	$scope.cancel = function () {
+    	$modalInstance.dismiss('cancel');
+  	};
 };
 
 assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope,$log){
@@ -269,14 +305,14 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 		      templateUrl: 'myModalContent.html',
 		      controller:ModalInstanceCtrl,
 		      resolve: {
-		        items: function () {
+		        employee: function () {
 		          return $scope.items;
 		        }
 		      }
 		    });
 
 		    modalInstance.result.then(function (selectedItem) {
-		      $scope.selected = selectedItem;
+		      $scope.selected = selectedItem;O
 		    }, function () {
 		      $log.info('Modal dismissed at: ' + new Date());
 		    });
@@ -294,9 +330,8 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 
 			*/ 
 			
-			var res = $scope.tag.split("-");
+			
 
-			$scope.tag = res[1];
 			urlFactory.getEmpbyId($scope.tag)
 				 .success(function(empData){
 					 		
@@ -320,9 +355,10 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 			 				 				return;
 			 				 			}
 			 				 			//else search for the owner 
-			 				 			urlFactory.findLatestOwner(assetData.data.tag)
+			 				 			urlFactory.findLatestOwner(assetData.data.uid)
 			 				 					  .success(function(ownerData){
 
+			 				 							$log.info("Owner Data");
 			 				 							$log.info(ownerData);
 			 				 							// If owner not found show the tab NO OWNER FOUND 
 			 				 							if(ownerData.notDefined)
@@ -334,7 +370,7 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 			 				 							urlFactory.findEmpbyId(ownerData.data.empid)
 			 				 									  .success(function(empownerData){
 
-							 				 							$log.info(empownerData);
+							 				 							$log.info("Latest Owner"+empownerData);
 							 				 							// If owner not found show the tab NO OWNER FOUND 
 							 				 							if(empownerData.notDefined)
 							 				 							{
@@ -345,7 +381,7 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 			 				 									  });
 
 			 				 							// and search for his/her assets .. 
-			 				 					/*
+			 				 					
 			 				 							urlFactory.findMapbyEmp(ownerData.data.empid)
 			 				 									  .success(function(assetDataEmp){
 
@@ -366,7 +402,7 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 															
 														 				});
 							 				 							$scope.assetDataEmp = assetDataEmp.data;
-			 				 									  }); */
+			 				 									  }); 
 														$scope.searchAsset(ownerData.data.empid);
 
 			 				 					  })
@@ -400,7 +436,7 @@ assetApp.controller('ScanningScreenController',function(urlFactory,$modal,$scope
 						 	$scope.dataSearch = false;
 						 	$scope.searchData = empData.data;
 						 	$scope.empData = $scope.searchData;
-							$scope.searchAsset($scope.empData.empid);
+							$scope.searchAsset($scope.empData.uid);
 							
 							urlFactory.addCheckout($scope.tag)
 									  .success(function(data){
@@ -547,14 +583,14 @@ assetApp.controller('OwnHistController',function($scope,urlFactory,$http,$log){
 
 });
 
-assetApp.controller('ListEmpController',function($scope,$http,$log){
+assetApp.controller('ListEmpController',['$scope','$http','$log','urlFactory',function($scope,$http,$log,urlFactory){
 	$scope.empList=[];
-	$http.get("http://localhost:1337/employee/findAllEmployees")
+	urlFactory.getAllEmployeeDetails()
 		 .success(function(data){
 		 	$scope.empList=data;
 		 	$log.info($scope.empList);
 		 });
-});
+}]);
 
 assetApp.controller('RemoveAssetController',['$scope','$http','$log','alertService',function($scope,$http,$log,alertService){
 	$scope.alerts = [];
@@ -607,15 +643,16 @@ assetApp.controller('AddAssetController',function($scope,$http,$log){
 			 });
 	};
 });
-assetApp.controller('MapAssetController',function($scope,$http,$log){
+assetApp.controller('MapAssetController',['$scope','$http','$log','urlFactory',function($scope,$http,$log,urlFactory){
 	$scope.assetList=[];
-	$http.get("http://localhost:1337/asset/findAllAssets")
+	$scope.mapForm = {};
+	urlFactory.getAllAssetsDetails()
 		 .success(function(data){
 		 	$scope.assetList=data;
 		 });
 
 	$scope.empList=[];
-	$http.get("http://localhost:1337/employee/findAllEmployees")
+	urlFactory.getAllEmployeeDetails()
 		 .success(function(data){
 		 	$scope.empList=data;
 		 	$log.info($scope.empList);
@@ -629,9 +666,21 @@ assetApp.controller('MapAssetController',function($scope,$http,$log){
 			 });
 
 	};
-});
+	$scope.changeAssetModel = function(data)
+	{	
+		$scope.mapForm.asid = data.uid;
+	};
+
+	$scope.changeEmpModel = function(data)
+	{	
+		$scope.mapForm.empid = data.uid;
+	}
+}]);
 
 assetApp.controller('MovementHistoryController',function($scope){
+
+});
+assetApp.controller('ImportCsvController',function($scope){
 
 });
 assetApp.controller('AssetDetailsController',['$routeParams','$scope','$location','$resource','$log',function($scope,$routeParams,$log,$location, $resource){

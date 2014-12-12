@@ -1,0 +1,62 @@
+
+
+  
+            <!-- Breadcrumb -->
+            <ol class="breadcrumb">
+              <li><a href="#">Home</a></li>
+              <li><a>Realtime View</a></li>
+              <li class="active">Scan Screen</li>
+            </ol>
+
+            <!--  -->
+            <div class="col-lg-12 panel-details">
+                 <div class="">
+                    <h3>Write to NFC Tag</h3>
+                 
+                 </div>
+
+            </div>
+            <script type="text/ng-template" id="writeTag.html">
+            
+              <div class="modal-body">
+                  <h4 class="modal-title">Qr Code</h4>
+                  <p>Point the device to this QR Code</p>
+                  <br>
+
+                  <qrcode data="{{employee}}" size="300"></qrcode>
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-primary" ng-click="cancel()">Ok</button>
+              </div>
+            </script>
+
+           
+            
+            <!-- Scan from Employees -->
+            <div ng-show="!submitted" class="col-lg-12">
+              <div class="panel panel-default" style="border-radius:0px;">
+                <div class="panel-body">
+                    <form class="form-horizontal" name="assetFeed">
+                      
+                      <!-- Asset Tag Input -->
+                      <div class="form-group">
+                        <label for="asset-tag" class="col-sm-2 control-label">Select Employee / Asset</label>
+                        <div class="col-sm-6">
+                          <input type="text" class="form-control" id="asset-tag" placeholder="Asset / Employee Id" ng-model="employee" required>
+                        </div>
+                      </div>
+                      <ul style="display:block;max-height:100px;overflow-y:auto;">
+                      <li style="display:block;" ng-repeat="data in list | filter:employee">
+                        <p ng-click="changeModel(data)">{{data.name}} - {{data.uid}}
+                        </p>
+                      </li>
+                      </ul>
+                      <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <button type="submit" class="btn submit btn-primary" ng-disabled="!assetFeed.$valid" ng-click="writeNFCdata(employee)">Write to NFC Tag</button>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>

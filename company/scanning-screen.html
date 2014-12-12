@@ -81,17 +81,17 @@
                               <p></p>
                               <p><strong>Employee Name: </strong> {{empData.name}} </p>
                               <p><strong>Employee LPN : </strong> {{empData.empid}}</p>
-                              <p><strong>Mac ID : </strong>  {{empData.mac}}</p>
+                              <p><strong>Unique ID : </strong>  {{empData.uid}}</p>
                               <p><strong>Email: </strong> {{empData.email}} </p>
                               <p><strong>Designation : </strong> {{empData.desig}}</p>
                               <p><strong>Phone : </strong>  {{empData.phone}}</p>
                               
                           </div>
                           <div class="col-md-3 right-asset-move">        
-                            <p class="img-right-emp-data"><img src="http://staffdevelopmentcentre.net/wp-content/uploads/2014/02/profile-placeholder-female.png"></p>
+                            <p class="img-right-emp-data"><img src="{{empData.url}}"></p>
                           </div>
-                          <div class="col-md-3 right-asset-move">        
-                            <p class="img-right-emp-data "><i class="{{icon}}"></i> <span class="success"> {{status}} </span> </p>
+                          <div class="col-md-3 right-asset-move" style="margin-top: 56px;">        
+                            <p class="img-right-emp-data "><span class="alert alert-success"><i class="{{icon}}"></i>  {{status}} </span> </p>
                           </div>
                   </div>
 

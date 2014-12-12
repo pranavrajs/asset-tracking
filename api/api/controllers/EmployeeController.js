@@ -5,24 +5,104 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
+var Converter=require("csvtojson").core.Converter;
+	var fs=require("fs");	
+
 module.exports = {
 	
-	
-	findAllEmployees:function(req,res){
-		
+
+	// List all assets with complete details
+	findAllEmployeeDetails:function(req,res){
 		Employee.find()
-			 .where({status:1})
+			 .where({'status':1})
 			 .exec(function(err,data){
-			 	console.log(err);
+			 	// Handle Error
 				if(err)
-					return res.json({status:404},404);
-				return res.json(data);
+					return res.json({status:403},403);
+
+				// Only relevant data is returned
+				var new_data = [];
+					data.forEach(function(employee){
+						var new_emp = employee;
+							delete new_emp.createdAt;
+							delete new_emp.updatedAt;	
+						new_data.push(new_emp);
+						console.log(new_emp);
+					});
+				
+				return res.json(new_data);
 			});
 	},
 
+	findAllEmployees:function(req,res){
+		Employee.find()
+			 .where({'status':1})
+			 .exec(function(err,data){
+			 	// Handle Error
+				if(err)
+					return res.json({status:403},403);
+
+				// Only relevant data is returned
+				var new_data = [];
+					data.forEach(function(employee){
+						var new_emp = {};
+							new_emp.name = employee.name;
+							new_emp.uid = employee.uid;
+						new_data.push(new_emp);
+						console.log(new_emp);
+					});
+				
+				return res.json(new_data);
+			});
+	},
+	
+	
+
+	upload: function  (req, res) {
+		
+		if(req.method == 'GET')
+			return res.json({'status':'GET not allowed'});						//	Call to /upload via GET is error
+
+		var csvFile = req.file('csvFile');
+		console.log(csvFile);
+		// if(!csvFile)
+		// 	return res.json({'status':'No file Found'})
+
+
+	    csvFile.upload(function onUploadComplete (err, files) {					//	Files will be uploaded to .tmp/uploads
+	    																		
+	    	if (err) return res.serverError(err);								//	IF ERROR Return and send 500 error with error
+
+	      	var csvFileName  = "./.tmp/uploads/"+files[0].filename;				
+				fileStream   = fs.createReadStream(csvFileName);				
+				csvConverter = new Converter({constructResult:true}); 			//	New converter instance
+
+			csvConverter.on("end_parsed",function(jsonArr){						//	end_parsed will be emitted once parsing finished
+				var newJsonArr = [];
+					jsonArr.forEach(function(data){
+						data.uid = "EM-"+data.empid;
+						newJsonArr.push(data);
+					});
+
+				Employee.create(newJsonArr)
+					 .exec(function(err,users){
+						if(!err)
+							console.log('ok');
+						else
+							return res.json({error:err.invalidAttributes});
+
+						return res.json({'status':'Import Complete'});
+				});
+ 
+			});
+
+			//read from file
+			fileStream.pipe(csvConverter);     
+	    });
+	},
 	findEmpbyId:function(req,res){
 		var id = req.param('id');
-		Employee.findOne({empid:id})
+		Employee.findOne({uid:id})
 				.where({status:1})
 				.exec(function(err,data){	
 					if(err)
@@ -34,6 +114,7 @@ module.exports = {
 						return res.json({notDefined:false,data:data});
 					});
 	},
+
 	findEmployeeDetails:function(req,res){
 		
 		var id = req.param('id');
@@ -58,7 +139,7 @@ module.exports = {
 				});
 
 
-		Employee.findOne({empid:id})
+		Employee.findOne({uid:id})
 				.where({status:1})
 				.then(function(data)
 				{

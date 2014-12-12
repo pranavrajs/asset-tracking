@@ -35,10 +35,14 @@ module.exports = {
   			required:"true",
   			unique: true
   		},
-  		mac:{
+  		uid:{
   			type:"string",
-  			required:true
+  			required:true,
+        unique:true
   		},
+      url:{
+        type:"string",
+      },
   		status:{
 			type:"integer",
 			defaultsTo:1

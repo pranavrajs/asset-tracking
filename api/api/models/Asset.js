@@ -10,9 +10,10 @@ module.exports = {
 	adapter:'mysqlServer',
 	attributes: {
 
-  		tag:{
+  		uid:{
   			type:"string",
-  			required:true
+  			required:true,
+        unique:true
   		},
   		name:{
   			type:"string",
@@ -20,7 +21,8 @@ module.exports = {
   		},
   		serial:{
   			type:"string",
-  			required:true
+  			required:true,
+        unique:true
   		},
   		asid:
   		{
@@ -31,22 +33,26 @@ module.exports = {
   			type:"string",
   			required:true
   		},
-  		purdat:{
-  			type:"date",
-  			required:true
-  		},
-  		warranty:{
-  			type:"integer",
-  			required:true
-  		},
-  		notes:{
-  			type:"string"
-  		},
-		status:{
-			type:"integer",
-			defaultsTo:1
-		}
-	
+      purdat:{
+        type:"date",
+        required:true
+      },
+      warranty:{
+        type:"integer",
+        required:true
+      },
+
+      status:{
+        type:"integer",
+        defaultsTo:1
+		  },
+
+      toJSON: function() {
+            var obj = this.toObject();
+            delete obj.createdAt;
+            delete obj.updatedAt;
+            return obj;
+      }
   }
 };
 

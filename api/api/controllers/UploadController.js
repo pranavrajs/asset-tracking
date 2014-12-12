@@ -23,12 +23,22 @@ module.exports = {
 				csvConverter = new Converter({constructResult:true}); 			//	New converter instance
 
 			csvConverter.on("end_parsed",function(jsonArr){						//	end_parsed will be emitted once parsing finished
+				var newJsonArr = [];
+					jsonArr.forEach(function(data){
+						data.uid = "AS-"+data.asid;
+						newJsonArr.push(data);
+					});
 
-				Employee.create(jsonArr).exec(function(err,users){
+				Asset.create(newJsonArr)
+					 .exec(function(err,users){
 						if(!err)
 							console.log('ok');
+						else
+							return res.json({error:err.invalidAttributes});
+
+						return res.json({'status':'Import Complete'});
 				});
-				return res.json({'status':'Import Complete'}); 
+ 
 			});
 
 			//read from file

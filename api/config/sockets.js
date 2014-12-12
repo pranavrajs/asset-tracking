@@ -19,7 +19,7 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
 
     // By default, do nothing.
-
+    console.log("new connection - ", session);
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects
